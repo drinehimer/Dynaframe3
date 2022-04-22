@@ -1,7 +1,7 @@
  #!/bin/bash
  
 version="3.0"
-file="/home/pi/Dynaframe/appsettings.json"
+
 
 GREEN='\033[1;32m'
 CYAN='\033[0;96m'
@@ -29,7 +29,7 @@ echo -e "  -- Special thanks: qwksilver  RichN001                --"
 echo -e "  -- Powered by Avalonia.                               --"
 echo -e "==========================================================${NC}"
 
-if [ "showhelp" = true ]; then
+if [ "showhelp" = true ];
 then
     echo ""
     echo "Usage: $0 {options}"
@@ -42,15 +42,10 @@ then
     exit 1 # Exit script after printing help
 fi
 
-shopt -s nocasematch; if [[ -not "${mode,}" =! (frame|server|combined)  ]]; then
+shopt -s nocasematch; if [[ -not "${mode,}" =! (frame|server|combined)  ]]; 
+then
     echo -e "${RED}Mode must be either frame, server, or combined${NC}"
     exit 1
-fi
-
-if [ -f "$file" ];
-then
-  echo -e "${GREEN} Found old appsettings..backing up ${NC}"
-  cp $file "/home/pi/"
 fi
 
 echo "Cleaning up before we begin..."
@@ -58,17 +53,6 @@ echo "Cleaning up before we begin..."
 #cd /home/pi/
 #rm -rf /home/pi/Dynaframe
 cd /home/pi/
-rm -rf /home/pi/.config/autostart/dynaframe.desktop
-cd /home/pi/
-rm /home/pi/Dynaframe/*.*
-rm /home/pi/Dynaframe/Dynaframe
-rm /home/pi/Dynaframe/createdump
-rm -rf /home/pi/Dynaframe/web/ico
-rm /home/pi/Dynaframe/web/*.*
-rm -rf /home/pi/Dynaframe/web/css
-rm -rf /home/pi/Dynaframe/web/js
-rm -rf /home/pi/Dynaframe/web/images
-rm -rf /home/pi/Dynaframe/images
 
 
 
@@ -78,7 +62,18 @@ sudo apt-get install unzip
 sudo apt-get install unclutter
 
 # Install the frame
-shopt -s nocasematch; if [[ "$mode" == "combined" ]] || [[ "$mode" == "frame" ]]; then
+shopt -s nocasematch; if [[ "$mode" == "combined" ]] || [[ "$mode" == "frame" ]]; 
+then
+    rm -rf /home/pi/.config/autostart/dynaframe.desktop
+    rm /home/pi/Dynaframe/*.*
+    rm /home/pi/Dynaframe/Dynaframe
+    rm /home/pi/Dynaframe/createdump
+    rm -rf /home/pi/Dynaframe/web/ico
+    rm /home/pi/Dynaframe/web/*.*
+    rm -rf /home/pi/Dynaframe/web/css
+    rm -rf /home/pi/Dynaframe/web/js
+    rm -rf /home/pi/Dynaframe/web/images
+    rm -rf /home/pi/Dynaframe/images
     mkdir -p  /home/pi/Dynaframe
     cd /home/pi/Dynaframe
 
@@ -112,7 +107,21 @@ shopt -s nocasematch; if [[ "$mode" == "combined" ]] || [[ "$mode" == "frame" ]]
     chmod +x /home/pi/UpgradeDynaframe.sh
 fi
 
-shopt -s nocasematch; if [[ "$mode" == "server" ]] || [[ "$mode" == "frame" ]]; then
+shopt -s nocasematch; if [[ "$mode" == "server" ]] || [[ "$mode" == "frame" ]]; 
+then
+    dbFolder = "/home/pi/DynaframeServer/Data/"
+    tmpDbFolder = "/home/pi/Data"
+    if [ -f "$dbFolder" ]; 
+    then
+        echo -e "${GREEN}Move database to temporary location${NC}"
+        mkdir /home/pi/Data
+        mv "${dbFolder}*" $tmpDbFolder
+    fi
+
+    cd /home/pi/
+    rm -rf /home/pi/.config/autostart/dynaframeserver.desktop
+    cd /home/pi/
+    rm -r /home/pi/DynaframeServer
     mkdir -p  /home/pi/DynaframeServer
     cd /home/pi/DynaframeServer
 
@@ -140,5 +149,11 @@ shopt -s nocasematch; if [[ "$mode" == "server" ]] || [[ "$mode" == "frame" ]]; 
     sudo cp dynaframeserver.desktop  /home/pi/.config/autostart
     echo -e "${GREEN}cleaning up zip file ${NC}"
     rm DynaframeServer2.zip
-    echo -e "${GREEN}cleaning up upload dir ${NC}"
+    
+    if [ -f "$dbFolder" ]; 
+    then
+        echo -e "${GREEN}Reload database${NC}"
+        mkdir /home/pi/Data
+        mv "${dbFolder}*" $tmpDbFolder
+    fi
 fi
